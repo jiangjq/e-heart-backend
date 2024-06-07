@@ -1,7 +1,11 @@
-const ImpulseRecord = require('../models/impulseRecord');
+const { ImpulseRecord, ImpulseRecordReflection } = require('../models/impulseRecord');
 const { Sequelize } = require('sequelize');
 
 class ImpulseRecordDao {
+
+  constructor() {
+    
+  }
     async getAllImpulseRecord() {
         return ImpulseRecord.findAll()
     }
@@ -22,4 +26,17 @@ class ImpulseRecordDao {
     }
 }
 
-module.exports = ImpulseRecordDao;
+class ImpulseRecordReflectionDao {
+
+  async getLatestImpulseRecordReflectionById(user_id) {
+      return ImpulseRecordReflection.findOne({
+          where: { user_id: user_id },
+          order: [['reflection_date', 'DESC']],
+        });
+  }
+}
+
+module.exports =  {
+  ImpulseRecordDao,
+  ImpulseRecordReflectionDao
+}
