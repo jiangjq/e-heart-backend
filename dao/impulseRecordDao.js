@@ -1,11 +1,7 @@
-const { ImpulseRecord, ImpulseRecordReflection } = require('../models/impulseRecord');
+const { ImpulseRecord, ImpulseRecordReflection } = require('../models/impulse');
 const { Sequelize } = require('sequelize');
 
 class ImpulseRecordDao {
-
-  constructor() {
-    
-  }
     async getAllImpulseRecord() {
         return ImpulseRecord.findAll()
     }

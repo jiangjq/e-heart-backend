@@ -1,6 +1,6 @@
 let expect
 const { ImpulseRecordDao, ImpulseRecordReflectionDao  } = require('../impulseRecordDao');
-const { ImpulseRecord, ImpulseRecordReflection } = require('../../models/impulseRecord');
+const { ImpulseRecord, ImpulseRecordReflection } = require('../../models/impulse');
 const User = require('../../models/user');
 const sequelize = require('../../utils/db');
 
