@@ -1,3 +1,5 @@
+// run test : 
+// npx mocha 'dao/daoTest/impulseRecordDao.test.js'
 let expect
 const { ImpulseRecordDao, ImpulseRecordReflectionDao  } = require('../impulseRecordDao');
 const { ImpulseRecord, ImpulseRecordReflection } = require('../../models/impulse');
