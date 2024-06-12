@@ -1,56 +1,49 @@
 const express = require('express');
 const app = express();
 const port = process.env.PORT || 3000;
-const mysql = require('mysql2/promise'); // 确保导入 mysql2/promise
-const db = require('./models'); // 导入 Sequelize 实例
+const mysql = require('mysql2/promise'); // Ensure mysql2/promise is imported
+const db = require('./models'); // Import Sequelize instance
 
-// 路由导入
+// Import routes
 const userRoutes = require('./routes/userRoutes');
-// const dietLogRoutes = require('./routes/dietLogRoutes');
-// const foodPurgeLogRoutes = require('./routes/foodPurgeLogRoutes');
-// const mealPlanRoutes = require('./routes/mealPlanRoutes');
-// const impulseRecordRoutes = require('./routes/impulseRecordRoutes');
-// const impulseStrategyRoutes = require('./routes/impulseStrategyRoutes');
-// const dietLogReflectionRoutes = require('./routes/dietLogReflectionRoutes');
-// const mealPlanReflectionRoutes = require('./routes/mealPlanReflectionRoutes');
-// const impulseRecordReflectionRoutes = require('./routes/impulseRecordReflectionRoutes');
+const dietLogRoutes = require('./routes/dietLogRoutes');
+const foodPurgeLogRoutes = require('./routes/foodPurgeLogRoutes');
+const dietLogReflectionRoutes = require('./routes/dietLogReflectionRoutes');
 
-// 中间件
+// Middleware
 app.use(express.json());
 
-// 路由设置
+// Setup routes
+console.log('1111111111');
 app.use('/api/users', userRoutes);
-// app.use('/api/diet_logs', dietLogRoutes);
-// app.use('/api/food_purge_logs', foodPurgeLogRoutes);
-// app.use('/api/meal_plans', mealPlanRoutes);
-// app.use('/api/impulse_records', impulseRecordRoutes);
-// app.use('/api/impulse_strategies', impulseStrategyRoutes);
-// app.use('/api/diet_log_reflections', dietLogReflectionRoutes);
-// app.use('/api/meal_plan_reflections', mealPlanReflectionRoutes);
-// app.use('/api/impulse_record_reflections', impulseRecordReflectionRoutes);
+console.log('2222');
+app.use('/api/diet_logs', dietLogRoutes);
+app.use('/api/food_purge_logs', foodPurgeLogRoutes);
+app.use('/api/diet_log_reflections', dietLogReflectionRoutes);
+console.log('33333');
 
-// 配置数据库连接
+// Database connection configuration
 const sequelizeConfig = require('./config/database.js').development;
 
-// 定义 createDatabase 函数
+// Define createDatabase function
 async function createDatabase() {
   console.log(`Connecting to MySQL with user: ${sequelizeConfig.username} and password: ${sequelizeConfig.password}`);
 
-  // 使用 mysql2 连接到 MySQL 服务器
+  // Use mysql2 to connect to MySQL server
   const connection = await mysql.createConnection({
     host: sequelizeConfig.host,
     user: sequelizeConfig.username,
-    password: 'password', // 确保传递正确的密码
+    password: sequelizeConfig.password, // Ensure correct password
   });
 
-  // 创建数据库（如果不存在）
+  // Create database if it doesn't exist
   await connection.query(`CREATE DATABASE IF NOT EXISTS \`${sequelizeConfig.database}\`;`);
   await connection.end();
 }
 
-// 创建数据库并启动服务器
+// Create database and start server
 createDatabase().then(() => {
-  // 同步模型
+  // Sync models
   db.sequelize.sync({ force: false }).then(() => {
     app.listen(port, () => {
       console.log(`Server running on port ${port}`);
@@ -61,3 +54,4 @@ createDatabase().then(() => {
 }).catch(error => {
   console.error('Error creating database:', error);
 });
+module.exports = app; // 确保导出 app 对象
