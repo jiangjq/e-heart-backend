@@ -22,8 +22,9 @@ class ImpulseService {
 
     async updateAndCreateNextImpulseRecordReflection(reflection) {
         var currentReflection = await this.#getOrCreateCurrentImpulseRecordReflection(reflection.user_id);
-        await impulseRecordReflectionDao.updateImpulseRecordReflection(reflection, currentReflection.id)
+        const updated_reflection = await impulseRecordReflectionDao.updateImpulseRecordReflection(reflection, currentReflection.id)
         await impulseRecordReflectionDao.addImpulseRecordReflection(currentReflection.user_id, currentReflection.impulse_record_reflection_num + 1);
+        return updated_reflection
     }
 
     async getRecordsRelatedToCurrentReflection(user_id) {

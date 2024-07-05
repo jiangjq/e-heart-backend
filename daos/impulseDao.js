@@ -33,14 +33,15 @@ class ImpulseRecordDao {
   }
 
 // Method to update impulse_response_experience by id
-async updateImpulseResponseExperience(id, newExperience) {
+async updateImpulseResponseExperience(impulse_id, impulse_response_experience) {
   try {
     await ImpulseRecord.update(
-      { impulse_response_experience: newExperience },
-      { where: { id } }
+      { impulse_response_experience: impulse_response_experience },
+      { where: { id : impulse_id } }
     );
+    return ImpulseRecord.findByPk(impulse_id)
   } catch (error) {
-    console.error(`Error updating impulse_response_experience for id ${id}:`, error);
+    console.error(`Error updating impulse_response_experience for id ${impulse_id}:`, error);
     throw error;
   }
 }
@@ -79,6 +80,7 @@ class ImpulseRecordReflectionDao {
       if (!updated) {
         throw new Error(`ImpulseRecordReflection with id ${reflection_id}, was not found or no changes were made.`);
       }
+      return ImpulseRecordReflection.findByPk(reflection_id)
     } catch (error) {
       console.error(`Error updating impulse record reflection for id ${reflection_id}:`, error);
       throw error;

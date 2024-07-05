@@ -40,10 +40,10 @@ class ImpulseController {
         if (error) {
             return res.status(400).json({ error: error.details[0].message }); // 400 Bad Request for validation errors
         }
-        const { impulse_id, impulse_response_experience } = value;
+        const { impulse_record_id, impulse_response_experience } = value;
         try {
-            await impulseRecordDao.updateImpulseResponseExperience(impulse_id, impulse_response_experience)
-            res.status(200);
+            const record = await impulseRecordDao.updateImpulseResponseExperience(impulse_record_id, impulse_response_experience)
+            res.status(200).json(record);
         } catch (error) {
           res.status(500).json({ error: error.message });
         }
@@ -55,8 +55,8 @@ class ImpulseController {
             return res.status(400).json({ error: error.details[0].message }); // 400 Bad Request for validation errors
         }
         try {
-            const reflection = await impulseService.updateAndCreateNextImpulseRecordReflection(value)
-            res.status(200).json(reflection);
+            const updated_reflection = await impulseService.updateAndCreateNextImpulseRecordReflection(value)
+            res.status(200).json(updated_reflection);
         } catch (error) {
           res.status(500).json({ error: error.message });
         }
