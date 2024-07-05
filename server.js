@@ -9,6 +9,7 @@ const userRoutes = require('./routes/userRoutes');
 const dietLogRoutes = require('./routes/dietLogRoutes');
 const foodPurgeLogRoutes = require('./routes/foodPurgeLogRoutes');
 const dietLogReflectionRoutes = require('./routes/dietLogReflectionRoutes');
+const impulseRoutes = require('./routes/impulseRoutes')
 
 // Middleware
 app.use(express.json());
@@ -20,6 +21,10 @@ console.log('2222');
 app.use('/api/diet_logs', dietLogRoutes);
 app.use('/api/food_purge_logs', foodPurgeLogRoutes);
 app.use('/api/diet_log_reflections', dietLogReflectionRoutes);
+app.use('/api/impulse', impulseRoutes);
+app.get('/', (req, res) => {
+  res.send('Hello World!');
+});
 console.log('33333');
 
 // Database connection configuration

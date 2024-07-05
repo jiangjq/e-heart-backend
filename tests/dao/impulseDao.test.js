@@ -1,7 +1,7 @@
 // run test : 
 // npx mocha 'dao/daoTest/impulseDao.test.js'
 let expect
-const { ImpulseRecordDao, ImpulseRecordReflectionDao  } = require('../impulseDao');
+const { ImpulseRecordDao, ImpulseRecordReflectionDao  } = require('../../daos/impulseDao');
 const { ImpulseRecord, ImpulseRecordReflection } = require('../../models/impulse');
 const User = require('../../models/user');
 const sequelize = require('../../utils/db');

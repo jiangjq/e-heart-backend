@@ -1,7 +1,8 @@
 const { DataTypes } = require('sequelize');
+const Sequelize = require('sequelize');
 const sequelize = require('../utils/db');
-const User = require('./user')
-
+const UserModel = require('./user');
+const User = UserModel(sequelize, Sequelize);
 const ImpulseRecord = sequelize.define('ImpulseRecord', {
   id: {
     type: DataTypes.INTEGER,
@@ -11,7 +12,7 @@ const ImpulseRecord = sequelize.define('ImpulseRecord', {
   user_id: {
     type: DataTypes.INTEGER,
     references: {
-        model: 'User',
+        model: 'users',
         key: 'id',
     },
     allowNull: false,
@@ -40,6 +41,10 @@ const ImpulseRecord = sequelize.define('ImpulseRecord', {
     type: DataTypes.STRING(256),
     allowNull: true,
   },
+  impulse_response_experience: {
+    type: DataTypes.STRING(256),
+    allowNull: true,
+  },
 }, {
   tableName: 'impulse_record',
   timestamps: true,
@@ -58,18 +63,18 @@ const ImpulseRecordReflection = sequelize.define('ImpulseRecordReflection', {
   user_id: {
     type: DataTypes.INTEGER,
     references: {
-        model: 'User',
+        model: 'users',
         key: 'id',
     },
     allowNull: false,
   },
   reflection_date: {
     type: DataTypes.DATE,
-    allowNull: false,
+    allowNull: true,
   },
   record_impulses_immediately: {
     type: DataTypes.BOOLEAN,
-    allowNull: false,
+    allowNull: true,
   },
   reasons_not_record_impulses: {
     type: DataTypes.STRING(256),
@@ -81,7 +86,7 @@ const ImpulseRecordReflection = sequelize.define('ImpulseRecordReflection', {
   },
   use_alternatives: {
     type: DataTypes.BOOLEAN,
-    allowNull: false,
+    allowNull: true,
   },
   impulse_persistence_minutes: {
     type: DataTypes.INTEGER,
@@ -97,10 +102,14 @@ const ImpulseRecordReflection = sequelize.define('ImpulseRecordReflection', {
   },
   impulse_persistence_effects: {
     type: DataTypes.STRING(256),
-    allowNull: false,
+    allowNull: true,
   },
   impulse_persistence_improvement_areas: {
     type: DataTypes.STRING(256),
+    allowNull: true,
+  },
+  impulse_record_reflection_num : {
+    type: DataTypes.INTEGER,
     allowNull: false,
   },
 }, {
@@ -125,7 +134,7 @@ const ImpulseStrategy = sequelize.define('ImpulseStrategy', {
   user_id: {
     type: DataTypes.INTEGER,
     references: {
-        model: 'User',
+        model: 'users',
         key: 'id',
     },
     allowNull: false,
@@ -149,34 +158,16 @@ const ImpulseStrategy = sequelize.define('ImpulseStrategy', {
 User.hasMany(ImpulseStrategy);
 ImpulseStrategy.belongsTo(User);
 
-const impulseRecordReview = sequelize.define('impulseRecordReview', {
-  id: {
-    type: DataTypes.INTEGER,
-    autoIncrement: true,
-    primaryKey: true,
-  },
-  user_id: {
-    type: DataTypes.INTEGER,
-    references: {
-        model: 'User',
-        key: 'id',
-    },
-    allowNull: false,
-  },
-  impulse_response_experience: {
-    type: DataTypes.STRING(256),
-    allowNull: false,
-  },
-}, {
-  tableName: 'impulse_record_review',
-  timestamps: true,
-});
-
-User.hasMany(impulseRecordReview);
-impulseRecordReview.belongsTo(User);
-
-
 module.exports = { 
   ImpulseRecord, 
-  ImpulseRecordReflection
+  ImpulseRecordReflection,
+  ImpulseStrategy,
  }
+
+
+ /**
+  * 冲动记录反思 增加是否完成字段，完成日期字段
+  * 每次有新用户注册，插入两条冲动记录反思 是否完成 = 否
+  * 每次反思时，查询上一次完成的冲动反思记录的完成日期A， 返回从A至今的所有 冲动记录，如果是第一次则返回至今所有的冲动记录
+  * 用户提交反思，更新 是否完成 = 是， 记录日期
+  */
